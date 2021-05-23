@@ -1,11 +1,32 @@
 @page "/todo"
 
-<h1>To Do Lst</h1>
+<h1>Todo (@todos.Count(todo => !todo.IsDone))</h1>
 
+<ul>
+    @foreach (var todo in todos)
+    {
+        <li>
+            @* @bind is 'equivalent' to setting value of state *@
+            <input type="checkbox" @bind="todo.IsDone" />
+            <input @bind="todo.Title" />
+        </li>
+    }
+</ul>
 
+<input placeholder="Something todo" @bind="newTodo" />
+@* must have the @ before onClick for it to be seen as event *@
+<button @onclick="AddTodo">Add todo</button>
 
+@code {
+    private List<TodoItem> todos = new();
+    private string newTodo;
 
-
- @code {
-
- }
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            todos.Add(new TodoItem { Title = newTodo });
+            newTodo = string.Empty;
+        }
+    }
+}
